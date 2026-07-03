@@ -1,0 +1,130 @@
+name: Mobile Auth Docker Build & Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'Image tag (e.g. v1.3.0, or leave empty for branch-based tag)'
+        type: string
+        default: ''
+      arm64:
+        description: 'Build for ARM64 architecture'
+        type: boolean
+        default: false
+        required: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TARGET_BRANCH: ${{ github.ref_name }}
+  ARM64_BUILD: ${{ github.event.inputs.arm64 }}
+  GHCR_OWNER: ${{ github.repository_owner }}
+
+jobs:
+  setup:
+    name: Build Setup
+    runs-on: ubuntu-22.04
+    outputs:
+      image_tag: ${{ steps.set_env_variables.outputs.IMAGE_TAG }}
+      buildx_platforms: ${{ steps.set_env_variables.outputs.BUILDX_PLATFORMS }}
+      buildx_driver: ${{ steps.set_env_variables.outputs.BUILDX_DRIVER }}
+
+    steps:
+      - id: set_env_variables
+        name: Set Environment Variables
+        run: |
+          # Determine image tag
+          if [ "${{ github.event.inputs.releaseVersion }}" != "" ]; then
+            FLAT_VERSION=$(echo "${{ github.event.inputs.releaseVersion }}" | sed 's/[^a-zA-Z0-9.-]//g')
+            echo "IMAGE_TAG=${FLAT_VERSION}" >> $GITHUB_OUTPUT
+          else
+            BR_NAME=$(echo "${{ env.TARGET_BRANCH }}" | sed 's/[^a-zA-Z0-9.-]//g')
+            echo "IMAGE_TAG=${BR_NAME}" >> $GITHUB_OUTPUT
+          fi
+
+          # Buildx setup
+          if [ "${{ env.ARM64_BUILD }}" == "true" ]; then
+            echo "BUILDX_DRIVER=cloud" >> $GITHUB_OUTPUT
+            echo "BUILDX_PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
+          else
+            echo "BUILDX_DRIVER=docker-container" >> $GITHUB_OUTPUT
+            echo "BUILDX_PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
+          fi
+
+      - id: checkout_files
+        name: Checkout Files
+        uses: actions/checkout@v6
+
+  build_and_push_backend:
+    name: Build & Push API Backend
+    runs-on: ubuntu-22.04
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+        with:
+          driver: ${{ needs.setup.outputs.buildx_driver }}
+          version: latest
+          platforms: ${{ needs.setup.outputs.buildx_platforms }}
+
+      - name: Build and Push API Backend
+        uses: docker/build-push-action@v7.0.0
+        with:
+          context: ./apps/api
+          file: ./apps/api/Dockerfile.api
+          platforms: ${{ needs.setup.outputs.buildx_platforms }}
+          tags: |
+            ghcr.io/${{ env.GHCR_OWNER }}/plane-backend:${{ needs.setup.outputs.image_tag }}
+            ghcr.io/${{ env.GHCR_OWNER }}/plane-backend:latest
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build_and_push_frontend:
+    name: Build & Push Web Frontend
+    runs-on: ubuntu-22.04
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+        with:
+          driver: ${{ needs.setup.outputs.buildx_driver }}
+          version: latest
+          platforms: ${{ needs.setup.outputs.buildx_platforms }}
+
+      - name: Build and Push Web Frontend
+        uses: docker/build-push-action@v7.0.0
+        with:
+          context: .
+          file: ./apps/web/Dockerfile.web
+          platforms: ${{ needs.setup.outputs.buildx_platforms }}
+          tags: |
+            ghcr.io/${{ env.GHCR_OWNER }}/plane-frontend:${{ needs.setup.outputs.image_tag }}
+            ghcr.io/${{ env.GHCR_OWNER }}/plane-frontend:latest
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            TURBO_VERSION=2.9.18
