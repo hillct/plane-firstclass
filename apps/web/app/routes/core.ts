@@ -402,4 +402,11 @@ export const coreRoutes: RouteConfigEntry[] = [
 
   // Account settings redirects
   route(":workspaceSlug/settings/account/*", "routes/redirects/core/workspace-account-settings.tsx"),
+
+  // ========================================================================
+  // MOBILE AUTH ROUTE
+  // ========================================================================
+
+  // Mobile web view authentication for iOS/Android apps
+  route("m/auth", "app/m/auth/page.tsx"),
 ] satisfies RouteConfig;

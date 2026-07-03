@@ -44,6 +44,22 @@ from .views import (
     GiteaOauthInitiateEndpoint,
     GiteaCallbackSpaceEndpoint,
     GiteaOauthInitiateSpaceEndpoint,
+    # mobile web view authentication
+    MobileEmailCheckEndpoint,
+    MobileMagicGenerateEndpoint,
+    MobileSignInAuthEndpoint,
+    MobileSignUpAuthEndpoint,
+    MobileMagicSignInEndpoint,
+    MobileMagicSignUpEndpoint,
+    MobileSessionTokenCheckEndpoint,
+    MobileSignOutAuthEndpoint,
+    MobileSessionTokenEndpoint,
+    MobileTokenEndpoint,
+    MobileRefreshTokenEndpoint,
+    MobileGoogleOauthInitiateEndpoint,
+    MobileGoogleCallbackEndpoint,
+    MobileGitHubOauthInitiateEndpoint,
+    MobileGitHubCallbackEndpoint,
 )
 
 urlpatterns = [
@@ -149,5 +165,74 @@ urlpatterns = [
         "spaces/gitea/callback/",
         GiteaCallbackSpaceEndpoint.as_view(),
         name="space-gitea-callback",
+    ),
+    # mobile web view authentication
+    path(
+        "mobile/email-check/",
+        MobileEmailCheckEndpoint.as_view(),
+        name="mobile-email-check",
+    ),
+    path(
+        "mobile/magic-generate/",
+        MobileMagicGenerateEndpoint.as_view(),
+        name="mobile-magic-generate",
+    ),
+    path("mobile/sign-in/", MobileSignInAuthEndpoint.as_view(), name="mobile-sign-in"),
+    path(
+        "mobile/sign-up/",
+        MobileSignUpAuthEndpoint.as_view(),
+        name="mobile-sign-up",
+    ),
+    path(
+        "mobile/magic-sign-in/",
+        MobileMagicSignInEndpoint.as_view(),
+        name="mobile-magic-sign-in",
+    ),
+    path(
+        "mobile/magic-sign-up/",
+        MobileMagicSignUpEndpoint.as_view(),
+        name="mobile-magic-sign-up",
+    ),
+    path(
+        "mobile/token-check/",
+        MobileSessionTokenCheckEndpoint.as_view(),
+        name="mobile-token-check",
+    ),
+    path(
+        "mobile/sign-out/", MobileSignOutAuthEndpoint.as_view(), name="mobile-sign-out"
+    ),
+    path(
+        "mobile/session-token/",
+        MobileSessionTokenEndpoint.as_view(),
+        name="mobile-token",
+    ),
+    path("mobile/token/", MobileTokenEndpoint.as_view(), name="mobile-token"),
+    # mobile web view refresh token
+    path(
+        "mobile/refresh-token/",
+        MobileRefreshTokenEndpoint.as_view(),
+        name="mobile-refresh-token",
+    ),
+    # mobile web view google oauth
+    path(
+        "mobile/google/",
+        MobileGoogleOauthInitiateEndpoint.as_view(),
+        name="mobile-google-initiate",
+    ),
+    path(
+        "mobile/google/callback/",
+        MobileGoogleCallbackEndpoint.as_view(),
+        name="mobile-google-callback",
+    ),
+    # mobile web view github oauth
+    path(
+        "mobile/github/",
+        MobileGitHubOauthInitiateEndpoint.as_view(),
+        name="mobile-github-initiate",
+    ),
+    path(
+        "mobile/github/callback/",
+        MobileGitHubCallbackEndpoint.as_view(),
+        name="mobile-github-callback",
     ),
 ]
