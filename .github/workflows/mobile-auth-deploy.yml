@@ -30,6 +30,7 @@ jobs:
       image_tag: ${{ steps.set_env_variables.outputs.IMAGE_TAG }}
       buildx_platforms: ${{ steps.set_env_variables.outputs.BUILDX_PLATFORMS }}
       buildx_driver: ${{ steps.set_env_variables.outputs.BUILDX_DRIVER }}
+      buildx_endpoint: ${{ steps.set_env_variables.outputs.BUILDX_ENDPOINT }}
 
     steps:
       - id: set_env_variables
@@ -48,9 +49,11 @@ jobs:
           if [ "${{ env.ARM64_BUILD }}" == "true" ]; then
             echo "BUILDX_DRIVER=cloud" >> $GITHUB_OUTPUT
             echo "BUILDX_PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
+            echo "BUILDX_ENDPOINT=makeplane/plane-dev" >> $GITHUB_OUTPUT
           else
             echo "BUILDX_DRIVER=docker-container" >> $GITHUB_OUTPUT
             echo "BUILDX_PLATFORMS=linux/amd64" >> $GITHUB_OUTPUT
+            echo "BUILDX_ENDPOINT=" >> $GITHUB_OUTPUT
           fi
 
       - id: checkout_files
@@ -78,6 +81,7 @@ jobs:
           driver: ${{ needs.setup.outputs.buildx_driver }}
           version: latest
           platforms: ${{ needs.setup.outputs.buildx_platforms }}
+          endpoint: ${{ needs.setup.outputs.buildx_endpoint }}
 
       - name: Build and Push API Backend
         uses: docker/build-push-action@v7.0.0
@@ -113,6 +117,7 @@ jobs:
           driver: ${{ needs.setup.outputs.buildx_driver }}
           version: latest
           platforms: ${{ needs.setup.outputs.buildx_platforms }}
+          endpoint: ${{ needs.setup.outputs.buildx_endpoint }}
 
       - name: Build and Push Web Frontend
         uses: docker/build-push-action@v7.0.0
