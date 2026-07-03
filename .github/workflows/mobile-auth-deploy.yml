@@ -64,6 +64,9 @@ jobs:
     name: Build & Push API Backend
     runs-on: ubuntu-22.04
     needs: [setup]
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -80,8 +83,6 @@ jobs:
         with:
           driver: ${{ needs.setup.outputs.buildx_driver }}
           version: latest
-          platforms: ${{ needs.setup.outputs.buildx_platforms }}
-          endpoint: ${{ needs.setup.outputs.buildx_endpoint }}
 
       - name: Build and Push API Backend
         uses: docker/build-push-action@v7.0.0
@@ -100,6 +101,9 @@ jobs:
     name: Build & Push Web Frontend
     runs-on: ubuntu-22.04
     needs: [setup]
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -116,8 +120,6 @@ jobs:
         with:
           driver: ${{ needs.setup.outputs.buildx_driver }}
           version: latest
-          platforms: ${{ needs.setup.outputs.buildx_platforms }}
-          endpoint: ${{ needs.setup.outputs.buildx_endpoint }}
 
       - name: Build and Push Web Frontend
         uses: docker/build-push-action@v7.0.0
