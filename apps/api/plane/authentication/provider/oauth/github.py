@@ -30,36 +30,10 @@ class GitHubOAuthProvider(OauthAdapter):
 
     organization_scope = "read:org"
 
-    def __init__(self, request, code=None, state=None, callback=None):
+    def __init__(self, request, code=None, state=None, callback=None, redirect_uri=None):
         GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, GITHUB_ORGANIZATION_ID = get_configuration_value([
-            {
-                "key": "GITHUB_CLIENT_ID",
-                "default": os.environ.get("GITHUB_CLIENT_ID"),
-            },
-            {
-                "key": "GITHUB_CLIENT_SECRET",
-                "default": os.environ.get("GITHUB_CLIENT_SECRET"),
-            },
-            {
-                "key": "GITHUB_ORGANIZATION_ID",
-                "default": os.environ.get("GITHUB_ORGANIZATION_ID"),
-            },
-        ])
-
-        if not (GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET):
-            raise AuthenticationException(
-                error_code=AUTHENTICATION_ERROR_CODES["GITHUB_NOT_CONFIGURED"],
-                error_message="GITHUB_NOT_CONFIGURED",
-            )
-
-        client_id = GITHUB_CLIENT_ID
-        client_secret = GITHUB_CLIENT_SECRET
-        self.organization_id = GITHUB_ORGANIZATION_ID
-
-        if self.organization_id:
-            self.scope += f" {self.organization_scope}"
-
-        redirect_uri = f"""{"https" if request.is_secure() else "http"}://{request.get_host()}/auth/github/callback/"""
+            [upto]
+        redirect_uri = redirect_uri or f"""{"https" if request.is_secure() else "http"}://{request.get_host()}/auth/github/callback/"""
         url_params = {
             "client_id": client_id,
             "redirect_uri": redirect_uri,

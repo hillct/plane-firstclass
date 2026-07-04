@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 # Module imports
 from plane.authentication.utils.host import user_ip
 from plane.db.models import User
-from plane.app.authentication.session import BaseSessionAuthentication
+from plane.authentication.session import BaseSessionAuthentication
 
 
 class MobileSignOutAuthEndpoint(APIView):
