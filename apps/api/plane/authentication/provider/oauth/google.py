@@ -26,7 +26,27 @@ class GoogleOAuthProvider(OauthAdapter):
 
     def __init__(self, request, code=None, state=None, callback=None, redirect_uri=None):
         (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET) = get_configuration_value(
-            [upto]
+            [
+                {
+                    "key": "GOOGLE_CLIENT_ID",
+                    "default": os.environ.get("GOOGLE_CLIENT_ID"),
+                },
+                {
+                    "key": "GOOGLE_CLIENT_SECRET",
+                    "default": os.environ.get("GOOGLE_CLIENT_SECRET"),
+                },
+            ]
+        )
+
+        if not (GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET):
+            raise AuthenticationException(
+                error_code=AUTHENTICATION_ERROR_CODES["GOOGLE_NOT_CONFIGURED"],
+                error_message="GOOGLE_NOT_CONFIGURED",
+            )
+
+        client_id = GOOGLE_CLIENT_ID
+        client_secret = GOOGLE_CLIENT_SECRET
+
         redirect_uri = redirect_uri or f"""{"https" if request.is_secure() else "http"}://{request.get_host()}/auth/google/callback/"""
         url_params = {
             "client_id": client_id,
