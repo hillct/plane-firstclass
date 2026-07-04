@@ -1,13 +1,13 @@
 "use client";
 
 import { FC } from "react";
-import { TInstanceConfig, TMobileWorkspaceInvitation } from "@plane/types";
+import type { IInstanceConfig, IWorkspaceMemberInvitation } from "@plane/types";
 // plane web components
 import { GoogleAuthButton, GitHubAuthButton } from "@/plane-web/components/mobile";
 
 type TOAuthRoot = {
-  invitationDetails: TMobileWorkspaceInvitation | undefined;
-  config: TInstanceConfig;
+  invitationDetails: IWorkspaceMemberInvitation | undefined;
+  config: IInstanceConfig;
 };
 
 export const OAuthRoot: FC<TOAuthRoot> = (props) => {

@@ -3,7 +3,7 @@
 import { FC, ReactNode, useEffect } from "react";
 import Image from "next/image";
 import useSWR from "swr";
-import { TMobileWorkspaceInvitation } from "@plane/types";
+import type { IWorkspaceMemberInvitation } from "@plane/types";
 // plane web mobile services
 import mobileAuthService from "@/plane-web/services/mobile.service";
 // assets
@@ -12,7 +12,7 @@ import planeLogo from "@/public/plane-logos/blue-without-text.png";
 type TMobileAuthInvitationWrapper = {
   invitationId: string | undefined;
   email: string | undefined;
-  handleInvitationDetails: (value: TMobileWorkspaceInvitation) => void;
+  handleInvitationDetails: (value: IWorkspaceMemberInvitation) => void;
   children: ReactNode;
 };
 

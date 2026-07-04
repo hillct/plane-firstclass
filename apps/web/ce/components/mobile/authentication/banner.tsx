@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Info, X } from "lucide-react";
-import { TMobileAuthErrorInfo } from "@plane/constants";
+import type { TMobileAuthErrorInfo } from "@plane/constants";
 // plane imports
 import { useTranslation } from "@plane/i18n";
 

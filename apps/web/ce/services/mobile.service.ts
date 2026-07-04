@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from "axios";
 import { API_BASE_URL } from "@plane/constants";
-import {
-  TMobileCSRFToken,
-  TEmailCheckRequest,
-  TEmailCheckResponse,
-  TMobileUser,
-  TMobileWorkspaceInvitation,
+import type {
+  ICsrfTokenData,
+  IEmailCheckData,
+  IEmailCheckResponse,
+  IUser,
+  IWorkspaceMemberInvitation,
 } from "@plane/types";
 
 export class MobileAuthService {
@@ -17,7 +17,7 @@ export class MobileAuthService {
     });
   }
 
-  requestCSRFToken = async (): Promise<TMobileCSRFToken> =>
+  requestCSRFToken = async (): Promise<ICsrfTokenData> =>
     this.axiosInstance
       .get("/auth/get-csrf-token/")
       .then((response) => response.data)
@@ -25,7 +25,7 @@ export class MobileAuthService {
         throw error;
       });
 
-  emailCheck = async (data: TEmailCheckRequest): Promise<TEmailCheckResponse> =>
+  emailCheck = async (data: IEmailCheckData): Promise<IEmailCheckResponse> =>
     this.axiosInstance
       .post("/auth/mobile/email-check/", data, { headers: {} })
       .then((response) => response?.data)
@@ -41,7 +41,7 @@ export class MobileAuthService {
         throw error?.response?.data;
       });
 
-  currentUser = async (): Promise<TMobileUser> =>
+  currentUser = async (): Promise<IUser> =>
     this.axiosInstance
       .get("/api/users/me/")
       .then((response) => response?.data)
@@ -97,7 +97,7 @@ export class MobileAuthService {
   fetchWorkspaceInvitation = async (data: {
     invitation_id: string;
     email: string;
-  }): Promise<TMobileWorkspaceInvitation | undefined> =>
+  }): Promise<IWorkspaceMemberInvitation | undefined> =>
     this.axiosInstance
       .get(`/api/mobile/workspace-invitation/${data?.invitation_id}/${data?.email}/`)
       .then((response) => response.data)

@@ -5,12 +5,14 @@ import { Eye, EyeOff, XCircle } from "lucide-react";
 import {
   EMobileAuthSteps,
   EMobileAuthModes,
-  TMobileAuthSteps,
-  TMobileAuthModes,
   API_BASE_URL,
   E_PASSWORD_STRENGTH,
 } from "@plane/constants";
-import { TMobileCSRFToken } from "@plane/types";
+import type {
+  TMobileAuthSteps,
+  TMobileAuthModes,
+} from "@plane/constants";
+import type { ICsrfTokenData } from "@plane/types";
 import { Button, Input, Spinner } from "@plane/ui";
 import { getPasswordStrength } from "@plane/utils";
 // services
@@ -50,7 +52,7 @@ export const MobileAuthPasswordForm: FC<TMobileAuthPasswordForm> = (props) => {
   // ref
   const authFormRef = useRef<HTMLFormElement>(null);
   // states
-  const [csrfPromise, setCsrfPromise] = useState<Promise<TMobileCSRFToken> | undefined>(undefined);
+  const [csrfPromise, setCsrfPromise] = useState<Promise<ICsrfTokenData> | undefined>(undefined);
   const [formData, setFormData] = useState<TFormValues>({ ...defaultFormValues, email });
   const [showPassword, setShowPassword] = useState<TShowPassword>({ password: false, passwordConfirmation: false });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

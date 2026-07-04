@@ -3,7 +3,8 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { CircleCheck, XCircle } from "lucide-react";
 // plane imports
-import { EMobileAuthSteps, EMobileAuthModes, TMobileAuthSteps, TMobileAuthModes, API_BASE_URL } from "@plane/constants";
+import { EMobileAuthSteps, EMobileAuthModes, API_BASE_URL } from "@plane/constants";
+import type { TMobileAuthSteps, TMobileAuthModes } from "@plane/constants";
 import { Button, Input, Spinner } from "@plane/ui";
 // hooks
 import useTimer from "@/hooks/use-timer";

@@ -6,13 +6,15 @@ import {
   EMobileAuthSteps,
   EMobileAuthModes,
   EMobileErrorAlertType,
-  TMobileAuthSteps,
-  TMobileAuthModes,
-  TMobileAuthErrorInfo,
   EMobileAuthErrorCodes,
-  TMobileAuthErrorCodes,
 } from "@plane/constants";
-import { TInstanceConfig, TMobileWorkspaceInvitation } from "@plane/types";
+import type {
+  TMobileAuthErrorCodes,
+  TMobileAuthErrorInfo,
+  TMobileAuthModes,
+  TMobileAuthSteps,
+} from "@plane/constants";
+import type { IInstanceConfig, IWorkspaceMemberInvitation } from "@plane/types";
 import { mobileAuthErrorHandler } from "@plane/utils";
 // plane web components
 import {
@@ -49,7 +51,7 @@ const OAUTH_ERROR_CODES = [
 ];
 
 type TAuthRoot = {
-  config: TInstanceConfig;
+  config: IInstanceConfig;
 };
 
 export const AuthRoot: FC<TAuthRoot> = (props) => {
@@ -67,7 +69,7 @@ export const AuthRoot: FC<TAuthRoot> = (props) => {
   const [email, setEmail] = useState(emailParam ? emailParam.toString() : "");
   const [authStep, setAuthStep] = useState<TMobileAuthSteps>(EMobileAuthSteps.EMAIL);
   const [errorInfo, setErrorInfo] = useState<TMobileAuthErrorInfo | undefined>(undefined);
-  const [invitationDetails, setInvitationDetails] = useState<TMobileWorkspaceInvitation | undefined>(undefined);
+  const [invitationDetails, setInvitationDetails] = useState<IWorkspaceMemberInvitation | undefined>(undefined);
 
   const handleErrorInfo = (value: TMobileAuthErrorInfo | undefined) => {
     setErrorInfo(value);

@@ -2,8 +2,9 @@
 
 import { FC } from "react";
 import Image from "next/image";
-import { EMobileAuthModes, EMobileAuthSteps, TMobileAuthModes, TMobileAuthSteps } from "@plane/constants";
-import { TMobileWorkspaceInvitation } from "@plane/types";
+import { EMobileAuthModes, EMobileAuthSteps } from "@plane/constants";
+import type { TMobileAuthModes, TMobileAuthSteps } from "@plane/constants";
+import type { IWorkspaceMemberInvitation } from "@plane/types";
 // assets
 import planeLogo from "@/public/plane-logos/blue-without-text.png";
 
@@ -40,7 +41,7 @@ const AUTH_LOGIN_HEADER_CONTENT_OPTIONS = {
 type TMobileAuthHeader = {
   authMode: TMobileAuthModes;
   authStep: TMobileAuthSteps;
-  invitationDetails: TMobileWorkspaceInvitation | undefined;
+  invitationDetails: IWorkspaceMemberInvitation | undefined;
 };
 
 export const MobileAuthHeader: FC<TMobileAuthHeader> = (props) => {

@@ -5,11 +5,13 @@ import { CircleAlert, XCircle } from "lucide-react";
 import {
   EMobileAuthSteps,
   EMobileAuthModes,
+} from "@plane/constants";
+import type {
   TMobileAuthSteps,
   TMobileAuthModes,
   TMobileAuthErrorInfo,
 } from "@plane/constants";
-import { IEmailCheckData } from "@plane/types";
+import type { IEmailCheckData } from "@plane/types";
 import { Button, Input, Spinner } from "@plane/ui";
 import { checkEmailValidity, cn } from "@plane/utils";
 // helpers

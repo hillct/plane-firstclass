@@ -408,5 +408,5 @@ export const coreRoutes: RouteConfigEntry[] = [
   // ========================================================================
 
   // Mobile web view authentication for iOS/Android apps
-  route("m/auth", "app/m/auth/page.tsx"),
+  route("m/auth", "./m/auth/page.tsx"),
 ] satisfies RouteConfig;
