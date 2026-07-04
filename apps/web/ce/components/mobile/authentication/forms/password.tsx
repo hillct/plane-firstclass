@@ -5,7 +5,6 @@ import { Eye, EyeOff, XCircle } from "lucide-react";
 import {
   EMobileAuthSteps,
   EMobileAuthModes,
-  API_BASE_URL,
   E_PASSWORD_STRENGTH,
 } from "@plane/constants";
 import type {

@@ -2,18 +2,8 @@
 
 import { FC, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  EMobileAuthSteps,
-  EMobileAuthModes,
-  EMobileErrorAlertType,
-  EMobileAuthErrorCodes,
-} from "@plane/constants";
-import type {
-  TMobileAuthErrorCodes,
-  TMobileAuthErrorInfo,
-  TMobileAuthModes,
-  TMobileAuthSteps,
-} from "@plane/constants";
+import { EMobileAuthSteps, EMobileAuthModes, EMobileErrorAlertType, EMobileAuthErrorCodes } from "@plane/constants";
+import type { TMobileAuthErrorCodes, TMobileAuthErrorInfo, TMobileAuthModes, TMobileAuthSteps } from "@plane/constants";
 import type { IInstanceConfig, IWorkspaceMemberInvitation } from "@plane/types";
 import { mobileAuthErrorHandler } from "@plane/utils";
 // plane web components
@@ -30,17 +20,17 @@ import {
 // services
 import mobileAuthService from "@/plane-web/services/mobile.service";
 
-const UNIQUE_CODE_ERROR_CODES = [
+const UNIQUE_CODE_ERROR_CODES = new Set([
   EMobileAuthErrorCodes.INVALID_MAGIC_CODE_SIGN_IN,
   EMobileAuthErrorCodes.INVALID_EMAIL_MAGIC_SIGN_IN,
   EMobileAuthErrorCodes.EXPIRED_MAGIC_CODE_SIGN_IN,
   EMobileAuthErrorCodes.EMAIL_CODE_ATTEMPT_EXHAUSTED_SIGN_IN,
-];
+]);
 
-const PASSWORD_ERROR_CODES = [EMobileAuthErrorCodes.AUTHENTICATION_FAILED_SIGN_IN];
+const PASSWORD_ERROR_CODES = new Set([EMobileAuthErrorCodes.AUTHENTICATION_FAILED_SIGN_IN]);
 
 // oauth error codes
-const OAUTH_ERROR_CODES = [
+const OAUTH_ERROR_CODES = new Set([
   EMobileAuthErrorCodes.OAUTH_NOT_CONFIGURED,
   EMobileAuthErrorCodes.GOOGLE_NOT_CONFIGURED,
   EMobileAuthErrorCodes.GITHUB_NOT_CONFIGURED,
@@ -48,7 +38,7 @@ const OAUTH_ERROR_CODES = [
   EMobileAuthErrorCodes.GITHUB_OAUTH_PROVIDER_ERROR,
   EMobileAuthErrorCodes.GITLAB_OAUTH_PROVIDER_ERROR,
   EMobileAuthErrorCodes.MOBILE_SIGNUP_DISABLED,
-];
+]);
 
 type TAuthRoot = {
   config: IInstanceConfig;
@@ -79,9 +69,9 @@ export const AuthRoot: FC<TAuthRoot> = (props) => {
   const isSMTPConfigured = config?.is_smtp_configured || false;
 
   // generating unique email code
-  const generateEmailUniqueCode = async (email: string) => {
-    if (!isSMTPConfigured || !email || email === "") return;
-    const payload = { email: email };
+  const generateEmailUniqueCode = async (emailAddress: string) => {
+    if (!isSMTPConfigured || !emailAddress || emailAddress === "") return;
+    const payload = { email: emailAddress };
     return await mobileAuthService
       .generateUniqueCode(payload)
       .then(() => ({ code: "" }))
@@ -98,11 +88,11 @@ export const AuthRoot: FC<TAuthRoot> = (props) => {
     const errorhandler = mobileAuthErrorHandler(errorCodeParam?.toString() as TMobileAuthErrorCodes);
     if (!errorhandler) return;
     // password handler
-    if (PASSWORD_ERROR_CODES.includes(errorhandler.code)) setAuthStep(EMobileAuthSteps.PASSWORD);
+    if (PASSWORD_ERROR_CODES.has(errorhandler.code)) setAuthStep(EMobileAuthSteps.PASSWORD);
     // unique code handler
-    if (UNIQUE_CODE_ERROR_CODES.includes(errorhandler.code)) setAuthStep(EMobileAuthSteps.UNIQUE_CODE);
+    if (UNIQUE_CODE_ERROR_CODES.has(errorhandler.code)) setAuthStep(EMobileAuthSteps.UNIQUE_CODE);
     // oauth signup handler
-    if (OAUTH_ERROR_CODES.includes(errorhandler.code)) setErrorInfo(errorhandler);
+    if (OAUTH_ERROR_CODES.has(errorhandler.code)) setErrorInfo(errorhandler);
     setErrorInfo(errorhandler);
   }, [errorCodeParam, errorMessageParam]);
 

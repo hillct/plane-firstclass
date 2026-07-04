@@ -1,11 +1,6 @@
 import { ReactNode } from "react";
-import {
-  TMobileAuthErrorCodes,
-  TMobileAuthErrorInfo,
-  EMobileAuthErrorCodes,
-  EMobileErrorAlertType,
-  SUPPORT_EMAIL,
-} from "@plane/constants";
+import { EMobileAuthErrorCodes, EMobileErrorAlertType, SUPPORT_EMAIL } from "@plane/constants";
+import type { TMobileAuthErrorCodes, TMobileAuthErrorInfo } from "@plane/constants";
 
 const mobileAuthErrorCodeMessages: {
   [key in TMobileAuthErrorCodes]: { title: string; message: (email?: string | undefined) => ReactNode };
@@ -37,8 +32,7 @@ const mobileAuthErrorCodeMessages: {
   },
   [EMobileAuthErrorCodes.USER_ACCOUNT_DEACTIVATED]: {
     title: `User account deactivated`,
-    message: () =>
-      `User account deactivated. Please contact ${!!SUPPORT_EMAIL ? SUPPORT_EMAIL : "administrator"}.`,
+    message: () => `User account deactivated. Please contact ${SUPPORT_EMAIL ? SUPPORT_EMAIL : "administrator"}.`,
   },
   [EMobileAuthErrorCodes.INVALID_PASSWORD]: {
     title: `Invalid password`,
