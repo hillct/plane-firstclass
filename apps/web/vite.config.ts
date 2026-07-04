@@ -22,7 +22,7 @@ export default defineConfig(() => ({
   },
   plugins: [reactRouter()],
   resolve: {
-    tsconfigPaths: [path.resolve(__dirname, "tsconfig.json")],
+    tsconfigPaths: true,
     alias: {
       // Next.js compatibility shims used within web
       "next/link": path.resolve(__dirname, "app/compat/next/link.tsx"),
