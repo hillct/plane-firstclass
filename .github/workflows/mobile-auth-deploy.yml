@@ -82,6 +82,7 @@ jobs:
         uses: docker/setup-buildx-action@v4
         with:
           driver: ${{ needs.setup.outputs.buildx_driver }}
+          endpoint: ${{ needs.setup.outputs.buildx_endpoint }}
           version: latest
 
       - name: Build and Push API Backend
@@ -119,6 +120,7 @@ jobs:
         uses: docker/setup-buildx-action@v4
         with:
           driver: ${{ needs.setup.outputs.buildx_driver }}
+          endpoint: ${{ needs.setup.outputs.buildx_endpoint }}
           version: latest
 
       - name: Build and Push Web Frontend
